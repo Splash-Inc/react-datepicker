@@ -194,6 +194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          minDate: this.props.minDate,
 	          maxDate: this.props.maxDate,
 	          excludeDates: this.props.excludeDates,
+	          availableDates: this.props.availableDates,
 	          weekStart: this.props.weekStart })
 	      );
 	    }
@@ -202,7 +203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  render: function render() {
 	    var clearButton = null;
 	    if (this.props.isClearable && this.state.selected != null) {
-	      clearButton = React.createElement("button", { className: "close-icon", onClick: this.clearSelected });
+	      clearButton = React.createElement("a", { className: "close-icon", href: "#", onClick: this.clearSelected });
 	    }
 
 	    return React.createElement(
@@ -461,12 +462,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    locale: React.PropTypes.string,
 	    moment: React.PropTypes.func.isRequired,
 	    dateFormat: React.PropTypes.string.isRequired,
-	    selected: React.PropTypes.object.isRequired,
 	    onSelect: React.PropTypes.func.isRequired,
 	    hideCalendar: React.PropTypes.func.isRequired,
 	    minDate: React.PropTypes.object,
 	    maxDate: React.PropTypes.object,
 	    excludeDates: React.PropTypes.array,
+	    availableDates: React.PropTypes.array,
 	    weekStart: React.PropTypes.string.isRequired
 	  },
 
@@ -551,6 +552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var minDate = new DateUtil(this.props.minDate).safeClone(),
 	        maxDate = new DateUtil(this.props.maxDate).safeClone(),
 	        excludeDates,
+	        availableDates,
 	        disabled;
 
 	    if (this.props.excludeDates && Array.isArray(this.props.excludeDates)) {
@@ -559,7 +561,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 
+	    if (this.props.availableDates && Array.isArray(this.props.availableDates)) {
+	      availableDates = map(this.props.availableDates, function (date) {
+	        return new DateUtil(date).safeClone();
+	      });
+	    }
+
 	    disabled = day.isBefore(minDate) || day.isAfter(maxDate) || some(excludeDates, function (xDay) {
+	      return day.sameDay(xDay);
+	    }) || availableDates && !some(availableDates, function (xDay) {
 	      return day.sameDay(xDay);
 	    });
 
