@@ -147,6 +147,11 @@
   &:not(:valid) ~ .close-icon {
     display: none;
   }
+
+  &--hidden {
+    visibility: hidden;
+    height: 0;
+  }
 }
 
 .close-icon {

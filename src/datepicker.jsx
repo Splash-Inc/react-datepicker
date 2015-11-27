@@ -12,6 +12,7 @@ var DatePicker = React.createClass( {
     weekdays: React.PropTypes.arrayOf( React.PropTypes.string ),
     locale: React.PropTypes.string,
     dateFormatCalendar: React.PropTypes.string,
+    popover: React.PropTypes.bool,
     popoverAttachment: React.PropTypes.string,
     popoverTargetAttachment: React.PropTypes.string,
     popoverTargetOffset: React.PropTypes.string,
@@ -29,7 +30,8 @@ var DatePicker = React.createClass( {
       moment: moment,
       onChange: function() {},
       disabled: false,
-      onFocus: function() {}
+      onFocus: function() {},
+      popover: true
     };
   },
 
@@ -116,29 +118,35 @@ var DatePicker = React.createClass( {
   },
 
   calendar: function() {
-    if ( this.state.focus ) {
-      return (
-        <Popover
-          attachment={this.props.popoverAttachment}
-          targetAttachment={this.props.popoverTargetAttachment}
-          targetOffset={this.props.popoverTargetOffset}
-          constraints={this.props.tetherConstraints}>
+    var calendar = <Calendar
+      weekdays={this.props.weekdays}
+      locale={this.props.locale}
+      moment={this.props.moment}
+      dateFormat={this.props.dateFormatCalendar}
+      selected={this.state.selected}
+      onSelect={this.handleSelect}
+      hideCalendar={this.hideCalendar}
+      minDate={this.props.minDate}
+      maxDate={this.props.maxDate}
+      excludeDates={this.props.excludeDates}
+      availableDates={this.props.availableDates}
+      weekStart={this.props.weekStart} />;
 
-          <Calendar
-            weekdays={this.props.weekdays}
-            locale={this.props.locale}
-            moment={this.props.moment}
-            dateFormat={this.props.dateFormatCalendar}
-            selected={this.state.selected}
-            onSelect={this.handleSelect}
-            hideCalendar={this.hideCalendar}
-            minDate={this.props.minDate}
-            maxDate={this.props.maxDate}
-            excludeDates={this.props.excludeDates}
-            availableDates={this.props.availableDates}
-            weekStart={this.props.weekStart} />
-        </Popover>
-      );
+    if ( this.props.popover ) {
+      if ( this.state.focus ) {
+        return (
+          <Popover
+            popover={this.props.popover}
+            attachment={this.props.popoverAttachment}
+            targetAttachment={this.props.popoverTargetAttachment}
+            targetOffset={this.props.popoverTargetOffset}
+            constraints={this.props.tetherConstraints}>
+            {calendar}
+          </Popover>
+        );
+      }
+    } else {
+      return calendar;
     }
   },
 
@@ -168,6 +176,7 @@ var DatePicker = React.createClass( {
           disabled={this.props.disabled}
           className={this.props.className}
           title={this.props.title}
+          popover={this.props.popover}
           readOnly={this.props.readOnly}
           required={this.props.required} />
         {clearButton}

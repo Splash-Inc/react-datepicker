@@ -63,6 +63,9 @@ var DateInput = React.createClass( {
   },
 
   render: function() {
+    var className = this.props.className +
+      ( this.props.popover ? "" : " datepicker__input--hidden" );
+
     return <input
         ref="input"
         type="text"
@@ -73,7 +76,7 @@ var DateInput = React.createClass( {
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}
         onChange={this.handleChange}
-        className={this.props.className}
+        className={className}
         disabled={this.props.disabled}
         placeholder={this.props.placeholderText}
         readOnly={this.props.readOnly}

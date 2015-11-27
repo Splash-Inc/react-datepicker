@@ -170,6 +170,10 @@
 .datepicker__input:not(:valid) ~ .close-icon {
   display: none;
 }
+.datepicker__input--hidden {
+  visibility: hidden;
+  height: 0;
+}
 
 .close-icon {
   background-color: transparent;

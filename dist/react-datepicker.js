@@ -71,6 +71,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    weekdays: React.PropTypes.arrayOf(React.PropTypes.string),
 	    locale: React.PropTypes.string,
 	    dateFormatCalendar: React.PropTypes.string,
+	    popover: React.PropTypes.bool,
 	    popoverAttachment: React.PropTypes.string,
 	    popoverTargetAttachment: React.PropTypes.string,
 	    popoverTargetOffset: React.PropTypes.string,
@@ -88,7 +89,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      moment: moment,
 	      onChange: function onChange() {},
 	      disabled: false,
-	      onFocus: function onFocus() {}
+	      onFocus: function onFocus() {},
+	      popover: true
 	    };
 	  },
 
@@ -175,28 +177,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  calendar: function calendar() {
-	    if (this.state.focus) {
-	      return React.createElement(
-	        Popover,
-	        {
-	          attachment: this.props.popoverAttachment,
-	          targetAttachment: this.props.popoverTargetAttachment,
-	          targetOffset: this.props.popoverTargetOffset,
-	          constraints: this.props.tetherConstraints },
-	        React.createElement(Calendar, {
-	          weekdays: this.props.weekdays,
-	          locale: this.props.locale,
-	          moment: this.props.moment,
-	          dateFormat: this.props.dateFormatCalendar,
-	          selected: this.state.selected,
-	          onSelect: this.handleSelect,
-	          hideCalendar: this.hideCalendar,
-	          minDate: this.props.minDate,
-	          maxDate: this.props.maxDate,
-	          excludeDates: this.props.excludeDates,
-	          availableDates: this.props.availableDates,
-	          weekStart: this.props.weekStart })
-	      );
+	    var calendar = React.createElement(Calendar, {
+	      weekdays: this.props.weekdays,
+	      locale: this.props.locale,
+	      moment: this.props.moment,
+	      dateFormat: this.props.dateFormatCalendar,
+	      selected: this.state.selected,
+	      onSelect: this.handleSelect,
+	      hideCalendar: this.hideCalendar,
+	      minDate: this.props.minDate,
+	      maxDate: this.props.maxDate,
+	      excludeDates: this.props.excludeDates,
+	      availableDates: this.props.availableDates,
+	      weekStart: this.props.weekStart });
+
+	    if (this.props.popover) {
+	      if (this.state.focus) {
+	        return React.createElement(
+	          Popover,
+	          {
+	            popover: this.props.popover,
+	            attachment: this.props.popoverAttachment,
+	            targetAttachment: this.props.popoverTargetAttachment,
+	            targetOffset: this.props.popoverTargetOffset,
+	            constraints: this.props.tetherConstraints },
+	          calendar
+	        );
+	      }
+	    } else {
+	      return calendar;
 	    }
 	  },
 
@@ -225,6 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        disabled: this.props.disabled,
 	        className: this.props.className,
 	        title: this.props.title,
+	        popover: this.props.popover,
 	        readOnly: this.props.readOnly,
 	        required: this.props.required }),
 	      clearButton,
@@ -2753,6 +2763,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  render: function render() {
+	    var className = this.props.className + (this.props.popover ? "" : " datepicker__input--hidden");
+
 	    return React.createElement("input", {
 	      ref: "input",
 	      type: "text",
@@ -2763,7 +2775,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onFocus: this.props.onFocus,
 	      onBlur: this.props.onBlur,
 	      onChange: this.handleChange,
-	      className: this.props.className,
+	      className: className,
 	      disabled: this.props.disabled,
 	      placeholder: this.props.placeholderText,
 	      readOnly: this.props.readOnly,
